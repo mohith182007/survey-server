@@ -2,15 +2,18 @@
 
 A full-stack web application for conducting personality assessments with data collection and storage. The application collects user information, presents personality assessment questions, and displays detailed results with explanations.
 
+**🎉 Now using PostgreSQL for reliability and Prisma for type-safe database access!**
+
 ## Project Structure
 
 ```
 surveyweb/
 ├── backend/               # Node.js/Express API server
-│   ├── models/           # MongoDB schemas
+│   ├── prisma/           # Prisma schema and migrations
 │   ├── routes/           # API endpoints
 │   ├── server.js         # Main server file
 │   ├── package.json      # Backend dependencies
+│   ├── render.yaml       # Render deployment config
 │   └── .env.example      # Environment variables template
 ├── frontend/             # React frontend application
 │   ├── public/           # Static files
@@ -20,6 +23,7 @@ surveyweb/
 │   │   ├── App.js        # Main App component
 │   │   └── index.js      # React entry point
 │   └── package.json      # Frontend dependencies
+├── POSTGRESQL_MIGRATION.md   # PostgreSQL setup guide
 └── README.md             # This file
 ```
 
@@ -31,24 +35,25 @@ surveyweb/
 - Smooth transition to assessment questions
 
 ### Personality Assessment
-- 10 comprehensive personality questions
-- 5-point Likert scale responses
+- 15 comprehensive emotional openness questions
+- 5-point scale responses with intelligent scoring
 - Real-time progress tracking
 - Previous/Next navigation
 
 ### Results & Classification
-- Personality type determination (16 MBTI types)
+- Personality type determination (6 types: Silent Sentinel, Watchful Gardener, Empathic Anchor, Masked Jester, Adaptive Hybrid, Ambivalent Type)
 - Detailed personality descriptions
 - Key traits, strengths, and areas for development
 - Career path suggestions
-- Visual score breakdown showing personality dimensions
-- Print-friendly results
+- Score breakdown and personality analysis
 
 ### Database & Backend
-- MongoDB for data persistence
+- **PostgreSQL** for robust data persistence ✅
+- **Prisma ORM** for type-safe database access
 - Express.js RESTful API
 - CORS enabled for frontend communication
 - Input validation and error handling
+
 
 ## Prerequisites
 
