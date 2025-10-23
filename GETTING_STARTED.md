@@ -1,10 +1,255 @@
-# Getting Started Guide
+# 🗄️ Getting Started - PostgreSQL Setup on Render
+
+**This guide walks you through creating your first PostgreSQL database on Render.**
+
+---
+
+## Step 1: Access Render Dashboard
+
+1. Go to **https://dashboard.render.com**
+2. If you don't have a Render account, click **"Sign Up"**
+3. You can sign up with:
+   - Email
+   - GitHub account (recommended - you already have one!)
+4. Complete the sign-up process
+
+---
+
+## Step 2: Create a New PostgreSQL Database
+
+### Navigate to Create Database
+
+1. In Render Dashboard, click **"New +"** button (top right)
+2. From the dropdown, select **"PostgreSQL"**
+
+```
+Dashboard → New + → PostgreSQL
+```
+
+### Fill in the Database Details
+
+You'll see a form with these fields:
+
+**Name:** `survey_db`
+- This is the display name in Render dashboard
+- Can be anything you want
+
+**Database:** `survey_db`
+- This is the actual database name
+- Leave as default or keep it the same as Name
+
+**User:** (Leave as default)
+- Render auto-generates this
+- Usually something like `survey_admin`
+
+**Password:** (Leave as default)
+- Render auto-generates a secure password
+- You'll see it after creation
+
+**Region:** Choose your closest region
+- For US: `Ohio` or `Virginia` (fastest)
+- For Asia: `Singapore` or `Tokyo`
+- For Europe: `Frankfurt`
+
+**Plan:** Select **"Free"** (bottom option)
+- Free tier: 90 days validity, then needs refresh
+- Perfect for testing and development
+
+### Screenshot Guide
+
+```
+┌─────────────────────────────────────────┐
+│ Create a New Service                    │
+├─────────────────────────────────────────┤
+│                                         │
+│ Name: [survey_db           ]            │
+│ Database: [survey_db       ]            │
+│ User: [postgres (auto)     ]            │
+│ Password: [auto-generated  ]            │
+│ Region: [Ohio ▼           ]            │
+│ Plan: [Free ●              ]            │
+│                                         │
+│ [Create Database] button               │
+└─────────────────────────────────────────┘
+```
+
+---
+
+## Step 3: Create the Database
+
+1. Click the **"Create Database"** button
+2. Render will create the database (takes 30-60 seconds)
+3. Status will change from "Provisioning" → "Available"
+
+---
+
+## Step 4: Get Your Connection Details
+
+Once the database shows **"Available"**, you'll see several connection strings:
+
+### Important URLs
+
+**Internal Database URL** ← THIS IS THE ONE YOU NEED!
+```
+postgresql://survey_admin:PASSWORD@dpg-abc123def456.render.internal:5432/survey_db
+```
+
+**External Database URL** (for external connections)
+```
+postgresql://survey_admin:PASSWORD@dpg-abc123def456.onrender.com:5432/survey_db
+```
+
+**Connection String** (for psql command line)
+```
+PGPASSWORD=PASSWORD psql -h dpg-abc123def456.render.internal -U survey_admin -d survey_db
+```
+
+### 📋 Copy the Internal Database URL
+
+This is what you need for your backend!
+
+```
+postgresql://survey_admin:PASSWORD@dpg-abc123def456.render.internal:5432/survey_db
+```
+
+**Where to find it:**
+```
+Render Dashboard
+└── Databases
+    └── survey_db (your database)
+        └── Connections
+            └── Internal Database URL ← Copy from here
+```
+
+---
+
+## Step 5: Verify Your Database
+
+### View in Dashboard
+
+1. Go to Render Dashboard
+2. Click on your database name (survey_db)
+3. You'll see:
+   - Status: Available ✅
+   - Region: Your chosen region
+   - Creation date
+   - Connection details
+
+---
+
+## 🎯 What You Get
+
+After creating the PostgreSQL database, you have:
+
+- ✅ A PostgreSQL database running on Render
+- ✅ A unique hostname (dpg-abc123def...)
+- ✅ A username (survey_admin)
+- ✅ A secure password (auto-generated)
+- ✅ Connection strings (Internal & External)
+- ✅ Free tier (90 days, renewable)
+
+---
+
+## 📝 Save This Information
+
+**You'll need this for the next step:**
+
+```
+Internal Database URL:
+postgresql://survey_admin:PASSWORD@dpg-abc123def456.render.internal:5432/survey_db
+
+This becomes your DATABASE_URL environment variable!
+```
+
+---
+
+## 🔍 Database Details Page - What You See
+
+When you click on your database, you'll see:
+
+```
+┌────────────────────────────────────────────────┐
+│ survey_db                                      │
+├────────────────────────────────────────────────┤
+│                                                │
+│ Status: Available                    ✅        │
+│ Region: Ohio                                  │
+│ Created: Oct 23, 2025                        │
+│ Memory: 90 MB (Free tier)                    │
+│                                                │
+│ ─────── Connections ────────                 │
+│                                                │
+│ Internal Database URL                        │
+│ postgresql://survey_admin:...                │
+│ [Copy button]                                │
+│                                                │
+│ External Database URL                        │
+│ postgresql://survey_admin:...                │
+│ [Copy button]                                │
+│                                                │
+│ ─────── Statistics ────────                  │
+│ Connections: 0                               │
+│ Queries: 0                                   │
+│                                                │
+└────────────────────────────────────────────────┘
+```
+
+---
+
+## ✅ Checklist - PostgreSQL Account Creation
+
+- [ ] Go to https://dashboard.render.com
+- [ ] Click "New +" → "PostgreSQL"
+- [ ] Enter Name: `survey_db`
+- [ ] Enter Database: `survey_db`
+- [ ] Leave User and Password as default (auto-generated)
+- [ ] Select your Region
+- [ ] Select "Free" plan
+- [ ] Click "Create Database"
+- [ ] Wait for status to show "Available" ✅
+- [ ] Click on database to see connection details
+- [ ] Copy "Internal Database URL"
+- [ ] Save the URL somewhere safe
+
+---
+
+## 🆘 Troubleshooting
+
+### Q: The database is stuck on "Provisioning"
+**A:** Wait 1-2 minutes. Render databases take a bit to provision.
+
+### Q: I don't see the connection details
+**A:** Click on the database name (survey_db) in your dashboard. The details page will show all connection strings.
+
+### Q: What's the difference between Internal and External URLs?
+**A:** 
+- **Internal:** Use this! It's for services within Render (faster, more secure)
+- **External:** For connecting from outside Render (slower, for dev only)
+
+### Q: How long is the free tier valid?
+**A:** 90 days. After that, you can refresh it or upgrade to a paid plan.
+
+---
+
+## 📞 Next Steps
+
+Once you have your PostgreSQL database set up:
+
+1. ✅ PostgreSQL account created
+2. ⏳ Save the Internal Database URL
+3. ⏳ Set up Backend Service on Render
+4. ⏳ Set environment variables
+5. ⏳ Deploy backend
+
+**See:** `DEPLOY_NOW.md` for next steps
+
+---
 
 ## Quick Start
 
-### 1. Prerequisites
+### 1. Prerequisites (After PostgreSQL is created)
 - **Node.js** v14 or higher
-- **MongoDB** (local or MongoDB Atlas)
+- **PostgreSQL** database on Render ✅
 - **npm** or **yarn**
 
 ### 2. Backend Setup
@@ -16,15 +261,14 @@ cd backend
 # Create environment file
 cp .env.example .env
 
-# Edit .env with your MongoDB connection
-# For local MongoDB:
-# MONGODB_URI=mongodb://localhost:27017/survey_db
-#
-# For MongoDB Atlas:
-# MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/survey_db
+# Edit .env with your PostgreSQL connection
+# DATABASE_URL=postgresql://survey_admin:PASSWORD@dpg-abc.render.internal:5432/survey_db
 
 # Install dependencies
 npm install
+
+# Generate Prisma client
+npx prisma generate
 
 # Start the backend server
 npm start
