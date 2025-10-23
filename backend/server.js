@@ -1,10 +1,11 @@
 const express = require('express');
-const mongoose = require('mongoose');
 const cors = require('cors');
 const bodyParser = require('body-parser');
+const { PrismaClient } = require('@prisma/client');
 require('dotenv').config();
 
 const app = express();
+const prisma = new PrismaClient();
 
 // CORS Configuration for production
 const corsOptions = {
@@ -18,27 +19,52 @@ app.use(cors(corsOptions));
 app.use(bodyParser.json({ limit: '10mb' }));
 app.use(bodyParser.urlencoded({ limit: '10mb', extended: true }));
 
-// MongoDB Connection with error handling
-mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/survey_db', {
-  useNewUrlParser: true,
-  useUnifiedTopology: true
-})
-  .then(() => console.log('✅ MongoDB connected successfully'))
-  .catch(err => {
-    console.error('❌ MongoDB connection error:', err.message);
-    process.exit(1);
-  });
+// Debug: Log environment variables
+console.log('📝 NODE_ENV:', process.env.NODE_ENV);
+console.log('📝 PORT:', process.env.PORT);
+console.log('📝 DATABASE_URL:', process.env.DATABASE_URL ? 'SET' : 'NOT SET');
+if (process.env.DATABASE_URL) {
+  const dbStart = process.env.DATABASE_URL.substring(0, 30);
+  console.log('📝 DATABASE_URL starts with:', dbStart + '...');
+}
+console.log('📝 Connecting to PostgreSQL via Prisma...');
+
+// Prisma connection test
+async function testPrismaConnection() {
+  try {
+    await prisma.$executeRaw`SELECT 1`;
+    console.log('✅ PostgreSQL connected successfully via Prisma');
+  } catch (err) {
+    console.error('❌ PostgreSQL connection error:', err.message);
+    console.error('⚠️  Database connection failed. Make sure DATABASE_URL is set correctly.');
+  }
+}
+
+// Test connection on startup
+testPrismaConnection();
+
+// Make Prisma available globally in the app
+app.locals.prisma = prisma;
 
 // Routes
 const surveyRoutes = require('./routes/survey');
 app.use('/api/survey', surveyRoutes);
 
 // Health check endpoint
-app.get('/api/health', (req, res) => {
+let dbStatus = 'connecting';
+app.get('/api/health', async (req, res) => {
+  try {
+    await prisma.$executeRaw`SELECT 1`;
+    dbStatus = 'connected';
+  } catch (err) {
+    dbStatus = 'disconnected';
+  }
+  
   res.json({ 
     status: 'Server is running',
     environment: process.env.NODE_ENV || 'development',
-    mongodb: mongoose.connection.readyState === 1 ? 'connected' : 'disconnected',
+    database: dbStatus,
+    databaseType: 'postgresql',
     timestamp: new Date().toISOString()
   });
 });
@@ -48,6 +74,7 @@ app.get('/', (req, res) => {
   res.json({ 
     message: 'Survey Platform API',
     version: '1.0.0',
+    database: 'PostgreSQL',
     endpoints: {
       health: '/api/health',
       user: '/api/survey/user',
@@ -71,8 +98,16 @@ app.use((err, req, res, next) => {
   });
 });
 
+// Graceful shutdown
+process.on('SIGINT', async () => {
+  console.log('Shutting down gracefully...');
+  await prisma.$disconnect();
+  process.exit(0);
+});
+
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`🚀 Server running on port ${PORT}`);
   console.log(`📍 Environment: ${process.env.NODE_ENV || 'development'}`);
+  console.log(`📊 Database: PostgreSQL via Prisma`);
 });

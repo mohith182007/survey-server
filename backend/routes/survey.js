@@ -1,8 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const { body, validationResult } = require('express-validator');
-const User = require('../models/User');
-const SurveyResponse = require('../models/SurveyResponse');
+const { PrismaClient } = require('@prisma/client');
+
+const prisma = new PrismaClient();
 
 // Create user and save initial info
 router.post('/user', [
@@ -18,40 +19,48 @@ router.post('/user', [
   }
 
   try {
-    const user = new User({
-      name: req.body.name,
-      age: req.body.age,
-      institution: req.body.institution,
-      institutionName: req.body.institutionName,
-      gmail: req.body.gmail
+    const user = await prisma.user.create({
+      data: {
+        name: req.body.name,
+        age: req.body.age,
+        institution: req.body.institution,
+        institutionName: req.body.institutionName,
+        gmail: req.body.gmail
+      }
     });
 
-    await user.save();
-    res.json({ success: true, userId: user._id });
+    res.json({ success: true, userId: user.id });
   } catch (error) {
     console.error('Error saving user:', error);
-    res.status(500).json({ error: 'Failed to save user information' });
+    if (error.code === 'P2002') {
+      res.status(400).json({ error: 'Email already exists' });
+    } else {
+      res.status(500).json({ error: 'Failed to save user information' });
+    }
   }
 });
 
 // Submit survey answers
 router.post('/submit', async (req, res) => {
-  const { userId, answers, classification, score } = req.body;
+  const { userId, answers, classification, score, answerCounts, answerBreakdown } = req.body;
 
   if (!userId || !answers || !classification) {
     return res.status(400).json({ error: 'Missing required fields' });
   }
 
   try {
-    const response = new SurveyResponse({
-      userId,
-      answers: new Map(Object.entries(answers)),
-      classification,
-      score
+    const response = await prisma.surveyResponse.create({
+      data: {
+        userId,
+        answers,
+        classification,
+        score: score || 0,
+        answerCounts: answerCounts || {},
+        answerBreakdown: answerBreakdown || {}
+      }
     });
 
-    await response.save();
-    res.json({ success: true, responseId: response._id });
+    res.json({ success: true, responseId: response.id });
   } catch (error) {
     console.error('Error saving survey response:', error);
     res.status(500).json({ error: 'Failed to save survey response' });
@@ -61,12 +70,17 @@ router.post('/submit', async (req, res) => {
 // Get user data
 router.get('/user/:userId', async (req, res) => {
   try {
-    const user = await User.findById(req.params.userId);
+    const user = await prisma.user.findUnique({
+      where: { id: req.params.userId },
+      include: { surveyResponses: true }
+    });
+
     if (!user) {
       return res.status(404).json({ error: 'User not found' });
     }
     res.json(user);
   } catch (error) {
+    console.error('Error fetching user:', error);
     res.status(500).json({ error: 'Failed to fetch user' });
   }
 });
@@ -74,12 +88,17 @@ router.get('/user/:userId', async (req, res) => {
 // Get survey response
 router.get('/response/:responseId', async (req, res) => {
   try {
-    const response = await SurveyResponse.findById(req.params.responseId).populate('userId');
+    const response = await prisma.surveyResponse.findUnique({
+      where: { id: req.params.responseId },
+      include: { user: true }
+    });
+
     if (!response) {
       return res.status(404).json({ error: 'Response not found' });
     }
     res.json(response);
   } catch (error) {
+    console.error('Error fetching response:', error);
     res.status(500).json({ error: 'Failed to fetch response' });
   }
 });
@@ -87,9 +106,14 @@ router.get('/response/:responseId', async (req, res) => {
 // Get all responses for analysis
 router.get('/responses', async (req, res) => {
   try {
-    const responses = await SurveyResponse.find().populate('userId');
+    const responses = await prisma.surveyResponse.findMany({
+      include: { user: true },
+      orderBy: { createdAt: 'desc' }
+    });
+
     res.json(responses);
   } catch (error) {
+    console.error('Error fetching responses:', error);
     res.status(500).json({ error: 'Failed to fetch responses' });
   }
 });
