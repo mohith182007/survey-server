@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_BASE_URL = 'https://survey-backend-ktjp.onrender.com/api';
+const API_BASE_URL = 'https://survey-server-9ill.onrender.com/api';
 
 export const submitUserInfo = async (userData) => {
   try {
