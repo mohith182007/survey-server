@@ -118,4 +118,16 @@ router.get('/responses', async (req, res) => {
   }
 });
 
+// TEMPORARY: Clear all users and survey responses (admin only)
+router.post('/admin/clear', async (req, res) => {
+  try {
+    await prisma.surveyResponse.deleteMany({});
+    await prisma.user.deleteMany({});
+    res.json({ success: true, message: 'All data cleared.' });
+  } catch (error) {
+    console.error('Error clearing data:', error);
+    res.status(500).json({ error: 'Failed to clear data.' });
+  }
+});
+
 module.exports = router;
