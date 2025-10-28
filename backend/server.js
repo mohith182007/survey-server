@@ -27,15 +27,18 @@ if (process.env.DATABASE_URL) {
   const dbStart = process.env.DATABASE_URL.substring(0, 30);
   console.log('📝 DATABASE_URL starts with:', dbStart + '...');
 }
-console.log('📝 Connecting to PostgreSQL via Prisma...');
+const isPostgres = process.env.DATABASE_URL?.includes('postgresql');
+const dbType = isPostgres ? 'PostgreSQL' : 'SQLite';
+console.log(`📝 Connecting to ${dbType} via Prisma...`);
 
 // Prisma connection test
 async function testPrismaConnection() {
   try {
-    await prisma.$executeRaw`SELECT 1`;
-    console.log('✅ PostgreSQL connected successfully via Prisma');
+    // Use a query that works with both SQLite and PostgreSQL
+    await prisma.user.count();
+    console.log(`✅ ${dbType} connected successfully via Prisma`);
   } catch (err) {
-    console.error('❌ PostgreSQL connection error:', err.message);
+    console.error(`❌ ${dbType} connection error:`, err.message);
     console.error('⚠️  Database connection failed. Make sure DATABASE_URL is set correctly.');
   }
 }
@@ -54,7 +57,7 @@ app.use('/api/survey', surveyRoutes);
 let dbStatus = 'connecting';
 app.get('/api/health', async (req, res) => {
   try {
-    await prisma.$executeRaw`SELECT 1`;
+    await prisma.user.count();
     dbStatus = 'connected';
   } catch (err) {
     dbStatus = 'disconnected';
@@ -64,7 +67,7 @@ app.get('/api/health', async (req, res) => {
     status: 'Server is running',
     environment: process.env.NODE_ENV || 'development',
     database: dbStatus,
-    databaseType: 'postgresql',
+    databaseType: dbType,
     timestamp: new Date().toISOString()
   });
 });
@@ -109,5 +112,5 @@ const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`🚀 Server running on port ${PORT}`);
   console.log(`📍 Environment: ${process.env.NODE_ENV || 'development'}`);
-  console.log(`📊 Database: PostgreSQL via Prisma`);
+  console.log(`📊 Database: ${isPostgres ? 'PostgreSQL' : 'SQLite'} via Prisma`);
 });

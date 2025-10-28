@@ -1,6 +1,6 @@
-import axios from 'axios';
+                  import axios from 'axios';
 
-const API_BASE_URL = 'https://survey-server-9ill.onrender.com/api';
+const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
 
 export const submitUserInfo = async (userData) => {
   try {

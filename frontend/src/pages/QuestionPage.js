@@ -244,7 +244,7 @@ function QuestionPage({ userId, onResponseCreated }) {
 
   return (
     <div className="question-page container">
-      <h1>Personality Assessment</h1>
+      <h1>Personality Discovery</h1>
       
       <div className="progress-bar">
         <div className="progress-fill" style={{ width: `${progress}%` }}></div>

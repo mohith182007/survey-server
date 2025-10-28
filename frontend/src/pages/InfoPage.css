@@ -1,7 +1,297 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
 .info-page {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   animation: slideIn 0.5s ease-in;
 }
 
+/* Hero Section */
+.hero-section {
+  padding: 60px 20px;
+  text-align: center;
+  color: white;
+}
+
+.hero-content h1 {
+  font-size: 3.5rem;
+  font-weight: 700;
+  margin-bottom: 15px;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.hero-subtitle {
+  font-size: 1.2rem;
+  opacity: 0.95;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+/* Main Content */
+.container {
+  max-width: 1600px;
+  margin: 0 auto;
+  padding: 0 20px 60px;
+}
+
+.main-content {
+  display: grid;
+  grid-template-columns: 1fr 1.2fr 1fr;
+  gap: 25px;
+  align-items: flex-start;
+}
+
+@media (max-width: 1200px) {
+  .main-content {
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
+}
+
+@media (max-width: 768px) {
+  .main-content {
+    grid-template-columns: 1fr;
+    gap: 25px;
+  }
+}
+
+/* Personality Cards */
+.personality-showcase {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+  animation: fadeInUp 0.8s ease-out;
+}
+
+.personality-showcase:nth-child(1) {
+  grid-column: 1;
+}
+
+.personality-showcase:nth-child(3) {
+  grid-column: 3;
+}
+
+@media (max-width: 1200px) {
+  .personality-showcase {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+  }
+
+  .personality-showcase:nth-child(1) {
+    grid-column: auto;
+  }
+
+  .personality-showcase:nth-child(3) {
+    grid-column: auto;
+  }
+}
+
+@media (max-width: 768px) {
+  .personality-showcase {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .personality-showcase {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+}
+
+.personality-card {
+  background: white;
+  border-radius: 12px;
+  padding: 18px 14px;
+  text-align: center;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.personality-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.18);
+}
+
+.card-icon {
+  font-size: 2.4rem;
+  margin-bottom: 10px;
+  display: block;
+}
+
+.personality-card h3 {
+  color: #667eea;
+  font-size: 1rem;
+  font-weight: 700;
+  margin-bottom: 8px;
+  line-height: 1.3;
+}
+
+.personality-card p {
+  color: #333;
+  font-size: 0.85rem;
+  line-height: 1.4;
+  font-weight: 600;
+  letter-spacing: 0.4px;
+}
+
+@media (max-width: 768px) {
+  .personality-card {
+    padding: 14px 10px;
+  }
+
+  .card-icon {
+    font-size: 2rem;
+  }
+
+  .personality-card h3 {
+    font-size: 0.88rem;
+    margin-bottom: 4px;
+  }
+
+  .personality-card p {
+    font-size: 0.75rem;
+    line-height: 1.3;
+  }
+}
+
+@media (max-width: 480px) {
+  .personality-card {
+    padding: 12px 8px;
+  }
+
+  .card-icon {
+    font-size: 1.8rem;
+    margin-bottom: 6px;
+  }
+
+  .personality-card h3 {
+    font-size: 0.8rem;
+  }
+
+  .personality-card p {
+    font-size: 0.7rem;
+  }
+}
+
+/* Form Wrapper */
+.form-wrapper {
+  background: white;
+  border-radius: 20px;
+  padding: 35px 40px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+  animation: fadeInUp 1s ease-out;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.form-wrapper h2 {
+  color: #333;
+  font-size: 1.8rem;
+  margin-bottom: 8px;
+  text-align: center;
+  font-weight: 700;
+}
+
+.form-subtitle {
+  text-align: center;
+  color: #999;
+  margin-bottom: 25px;
+  font-size: 0.95rem;
+  font-weight: 500;
+}
+
+/* Form Groups */
+.form-group {
+  margin-bottom: 18px;
+}
+
+.form-group label {
+  display: block;
+  color: #333;
+  font-weight: 600;
+  margin-bottom: 6px;
+  font-size: 0.95rem;
+  letter-spacing: 0.3px;
+}
+
+.form-group input,
+.form-group select {
+  width: 100%;
+  padding: 10px 12px;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  transition: all 0.3s ease;
+  font-family: inherit;
+  font-weight: 500;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+  background-color: #f8f9ff;
+}
+
+.form-group input::placeholder {
+  color: #bbb;
+  font-weight: 400;
+}
+
+/* Error Messages */
+.error {
+  color: #e74c3c;
+  font-size: 0.85rem;
+  margin-top: 4px;
+  display: flex;
+  align-items: center;
+  font-weight: 500;
+}
+
+.error::before {
+  content: "⚠ ";
+  margin-right: 5px;
+}
+
+/* Submit Button */
+.submit-btn {
+  width: 100%;
+  padding: 12px 14px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 8px;
+  letter-spacing: 0.5px;
+}
+
+.submit-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+}
+
+.submit-btn:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.submit-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+/* Animations */
 @keyframes slideIn {
   from {
     opacity: 0;
@@ -13,9 +303,83 @@
   }
 }
 
-.subtitle {
-  text-align: center;
-  color: #666;
-  margin-bottom: 30px;
-  font-size: 16px;
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .hero-content h1 {
+    font-size: 2.2rem;
+  }
+
+  .hero-subtitle {
+    font-size: 0.95rem;
+  }
+
+  .form-wrapper {
+    padding: 25px 30px;
+  }
+
+  .form-wrapper h2 {
+    font-size: 1.5rem;
+  }
+
+  .form-subtitle {
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero-section {
+    padding: 40px 15px;
+  }
+
+  .hero-content h1 {
+    font-size: 1.8rem;
+    margin-bottom: 10px;
+  }
+
+  .hero-subtitle {
+    font-size: 0.85rem;
+  }
+
+  .container {
+    padding: 0 15px 40px;
+  }
+
+  .form-wrapper {
+    padding: 20px 20px;
+  }
+
+  .form-wrapper h2 {
+    font-size: 1.3rem;
+  }
+
+  .form-group {
+    margin-bottom: 14px;
+  }
+
+  .form-group label {
+    font-size: 0.9rem;
+    margin-bottom: 5px;
+  }
+
+  .form-group input,
+  .form-group select {
+    padding: 9px 10px;
+    font-size: 0.9rem;
+  }
+
+  .submit-btn {
+    padding: 11px 12px;
+    font-size: 0.95rem;
+  }
 }

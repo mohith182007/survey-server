@@ -48,6 +48,7 @@ function InfoPage({ onUserCreated }) {
     }
 
     setLoading(true);
+    // Ensure age is sent as a number
     const payload = {
       ...formData,
       age: Number(formData.age)
@@ -74,7 +75,6 @@ function InfoPage({ onUserCreated }) {
 
       <div className="container">
         <div className="main-content">
-          {/* Left Side - 3 Cards */}
           <div className="personality-showcase">
             <div className="personality-card">
               <div className="card-icon">🦉</div>
@@ -87,13 +87,27 @@ function InfoPage({ onUserCreated }) {
               <p>Intelligent and cautious, wisely selective</p>
             </div>
             <div className="personality-card">
-              <div className="card-icon">🐬</div>
+              <div className="card-icon">�</div>
               <h3>The Empathic Anchor</h3>
               <p>Thrives in connection and cooperation</p>
             </div>
+            <div className="personality-card">
+              <div className="card-icon">🦎</div>
+              <h3>The Masked Jester</h3>
+              <p>Masks feelings with humor, adapts expression</p>
+            </div>
+            <div className="personality-card">
+              <div className="card-icon">🔥</div>
+              <h3>Adaptive Hybrid</h3>
+              <p>Flexible blend of openness and caution</p>
+            </div>
+            <div className="personality-card">
+              <div className="card-icon">🦋</div>
+              <h3>Ambivalent Type</h3>
+              <p>Craves closeness yet fears rejection</p>
+            </div>
           </div>
 
-          {/* Middle - Form */}
           <div className="form-wrapper">
             <h2>Let's Get Started</h2>
             <p className="form-subtitle">Tell us about yourself</p>
@@ -174,25 +188,6 @@ function InfoPage({ onUserCreated }) {
                 {loading ? 'Submitting...' : 'Start Assessment'}
               </button>
             </form>
-          </div>
-
-          {/* Right Side - 3 Cards */}
-          <div className="personality-showcase">
-            <div className="personality-card">
-              <div className="card-icon">🦎</div>
-              <h3>The Masked Jester</h3>
-              <p>Masks feelings with humor, adapts expression</p>
-            </div>
-            <div className="personality-card">
-              <div className="card-icon">🔥</div>
-              <h3>Adaptive Hybrid</h3>
-              <p>Flexible blend of openness and caution</p>
-            </div>
-            <div className="personality-card">
-              <div className="card-icon">🦋</div>
-              <h3>Ambivalent Type</h3>
-              <p>Craves closeness yet fears rejection</p>
-            </div>
           </div>
         </div>
       </div>

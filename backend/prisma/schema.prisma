@@ -6,7 +6,7 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "sqlite"
   url      = env("DATABASE_URL")
 }
 
@@ -29,16 +29,16 @@ model SurveyResponse {
   userId        String
   user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   
-  // Survey answers - stored as JSON
-  answers       Json     // Map of question answers
+  // Survey answers - stored as JSON string
+  answers       String   // Map of question answers (JSON string)
   
   // Personality classification
   classification String
   score         Int      @default(0)
   
   // Additional metadata
-  answerCounts  Json     @default("{}")
-  answerBreakdown Json   @default("{}")
+  answerCounts  String   @default("{}")  // JSON string
+  answerBreakdown String   @default("{}")  // JSON string
   
   completedAt   DateTime @default(now())
   createdAt     DateTime @default(now())
